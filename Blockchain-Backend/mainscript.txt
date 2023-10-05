@@ -1,0 +1,182 @@
+sudo apt-get install curl
+sudo apt-get update
+sudo apt-get install golang
+curl -O https://storage.googleapis.com/golang/go1.13.5.linux-amd64.tar.gz
+tar -xvf go1.13.5.linux-amd64.tar.gz
+sudo mv go /usr/local
+ls /usr/local
+sudo nano ~/.bashrc
+
+"""
+export GOPATH="/usr/local/go"
+export PATH="$PATH:$GOPATH/bin"
+"""
+
+source ~/.bashrc
+sudo apt-get install nodejs
+sudo apt-get install npm
+sudo apt-get install python
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+apt-cache policy docker-ce
+sudo apt-get install -y docker-ce
+sudo apt-get install docker-compose
+sudo apt-get upgrade
+
+sudo usermod -a -G docker $USER
+newgrp docker
+sudo chown -R $USER:$USER /var/log
+sudo usermod -aG docker ${USER}
+sudo chmod 666 /var/run/docker.sock
+docker version
+
+
+#wget https://go.dev/dl/go1.13.linux-amd64.tar.gz
+#tar -xzvf go1.13.linux-amd64.tar.gz
+#source ~/.bashrc
+
+curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+sudo apt-get install -y nodejs
+sudo apt-get update
+sudo apt-get upgrade
+curl -V
+npm -v
+docker version
+docker-compose version
+go version
+python -V
+node -v
+mkdir test
+cd test
+sudo curl -sSL https://bit.ly/2ysbOFE | sudo bash -s
+sudo docker images
+sudo docker run hello-world
+cd fabric-samples/
+cd bin
+pwd
+"""
+copy its PATH
+"""
+sudo nano ~/.bashrc
+
+"""
+export PATH="$PATH:$HOME/test/fabric-samples/bin"
+
+"""
+source ~/.bashrc
+
+"""
+close tab and open another one to see path variable
+Test in another terminal by typing peer cmd and see if its working fine or not
+"""
+git clone https://github.com/adhavpavan/BasicNetwork-2.0.git
+cd BasicNetwork-2.0/
+cd artifacts/channel/
+cryptogen generate --config=./crypto-config.yaml --output=./crypto-config/
+
+"""
+comment till line 10 in create-artifacts.sh
+
+"""
+./create-artifacts.sh 
+
+cd ..
+sudo docker-compose up -d
+sudo docker ps
+
+cd ..
+./createChannel.sh 
+
+
+################################################################################################
+copy your git repo and copy past 
+
+1)deploychaincode.sh file 
+2)api-2.0 folder
+
+###############################################################################################
+
+git clone https://github.com/hardik2000/FYP_BasicNetwork.git
+cd FYP_BasicNetwork/
+
+cp deployChaincode.sh ~/BasicNetwork-2.0/
+rm -rf ~/BasicNetwork-2.0/api-2.0/
+cp -rf api-2.0/ ~/BasicNetwork-2.0/
+cd ../BasicNetwork-2.0/
+rm -rf /$HOME/BasicNetwork-2.0/artifacts/private-data
+cp -rf /$HOME/FYP_BasicNetwork_V2/artifacts/private-data ./artifacts/
+cp -rf /$HOME/FYP_BasicNetwork_V2/artifacts/src/github.com/chaincode /$HOME/BasicNetwork-2.0/artifacts/src/github.com
+cp -r FYP_BasicNetwork_V2/front-end/ BasicNetwork-2.0/
+
+./deployChaincode.sh
+
+
+"""
+Add certificated to this file present at this path
+/home/teamd/BasicNetwork-2.0/api-2.0/config/connection-org1.json
+/home/teamd/BasicNetwork-2.0/api-2.0/config/connection-org2.json
+
+Take certificated from 
+/home/teamd/BasicNetwork-2.0/artifacts/channel/crypto-config/peerOrganizations
+
+/home/teamd/BasicNetwork-2.0/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+/home/teamd/BasicNetwork-2.0/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
+/home/teamd/BasicNetwork-2.0/artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+
+similarly for org2
+
+"""
+
+cd api-2.0
+npm install
+
+---------------------------------------------------------------------------------------------------------------------------------------
+################################################
+Next Phase
+################################################
+#PC 1
+
+https://www.server-world.info/en/note?os=Ubuntu_16.04&p=ssh&f=4
+
+docker swarm init
+docker swarm join-token manager
+
+# copy the output which says To add a manager to this swarm, run the following command:
+
+#PC 2
+
+execute the copied statement on PC 2
+
+
+#PC 1
+
+
+
+#PC 2
+
+scp teamdfyp@10.1.0.4:/home/teamdfyp/BasicNetwork-2.0/artifacts/channel/crypto-config /home/teamdfyp2/BasicNetwork-2.0/artifacts/channel/
+
+
+
+scp -r teamdfyp@10.1.0.4:/home/teamdfyp/BasicNetwork-2.0/channel-artifacts /home/teamdfyp2/BasicNetwork-2.0/
+
+
+
+#PC 1
+
+docker run --rm -it --network="basic-network" --name ca.example.com -p 7054:7054 -e FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server -e FABRIC_CA_SERVER_CA_NAME=ca.org1.example.com -e FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem -e FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk -v $(pwd)/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config -e CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hyp-net hyperledger/fabric-ca sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+
+
+
+docker run --rm -it --network="basic-network" --name orderer.example.com -p 7050:7050 -e ORDERER_GENERAL_LOGLEVEL=info -e ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 -e ORDERER_GENERAL_LISTENPORT=7050 -e ORDERER_GENERAL_GENESISMETHOD=file -e ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block -e ORDERER_GENERAL_LOCALMSPID=OrdererMSP -e ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp -e ORDERER_GENERAL_TLS_ENABLED=true -e CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic-network -v $(pwd)/channel-artifacts/genesis.block:/var/hyperledger/orderer/genesis.block -v $(pwd)/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp -w /opt/gopath/src/github.com/hyperledger/fabric hyperledger/fabric-orderer orderer
+
+
+docker run --rm -it --network="basic-network" --name couchdb0 -p 5984:5984 -e COUCHDB_USER= -e COUCHDB_PASSWORD= -e CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic-network hyperledger/fabric-couchdb
+
+
+
+
+
+docker run --rm -it --link orderer.example.com:orderer.example.com --network="basic-network" --name peer0.org1.example.com -p 8051:7051 -p 8053:7053 -e CORE_LEDGER_STATE_STATEDATABASE=CouchDB -e CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0:5984 -e CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME= -e CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD= -e CORE_PEER_ADDRESSAUTODETECT=true -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock -e CORE_LOGGING_LEVEL=DEBUG -e CORE_PEER_NETWORKID=peer0.org1.example.com -e CORE_NEXT=true -e CORE_PEER_ENDORSER_ENABLED=true -e CORE_PEER_ID=peer0.org1.example.com -e CORE_PEER_PROFILE_ENABLED=true -e CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer.example.com:7050 -e CORE_PEER_GOSSIP_IGNORESECURITY=true -e CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=basic-network -e CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051 -e CORE_PEER_TLS_ENABLED=true -e CORE_PEER_GOSSIP_USELEADERELECTION=false -e CORE_PEER_GOSSIP_ORGLEADER=true -e CORE_PEER_LOCALMSPID=Org1MSP -e CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/crypto/peer/tls/server.crt -e CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/crypto/peer/tls/server.key -v /var/run/:/host/var/run/ -v $(pwd)/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/crypto/peer/msp -w /opt/gopath/src/github.com/hyperledger/fabric/peer hyperledger/fabric-peer peer node start
